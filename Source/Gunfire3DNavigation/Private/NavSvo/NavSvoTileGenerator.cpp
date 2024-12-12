@@ -1,12 +1,11 @@
 // Copyright Gunfire Games, LLC. All Rights Reserved.
 
 #include "NavSvoTileGenerator.h"
-
+#include "AI/Navigation/NavigationElement.h"
+#include "AI/Navigation/NavigationRelevantData.h"
 #include "Gunfire3DNavData.h"
 #include "Gunfire3DNavigationUtils.h"
 #include "NavSvoGenerator.h"
-
-#include "AI/Navigation/NavigationRelevantData.h"
 
 FNavSvoTileGenerator::FNavSvoTileGenerator(const FNavSvoGenerator& InParent, const FNavSvoGeneratorConfig& InConfig)
 	: Config(InConfig)
@@ -209,11 +208,8 @@ void FNavSvoTileGenerator::AddReferencedObjects(FReferenceCollector& Collector)
 	{
 		for (FNavigationOctreeCollider::TNavigationData& RelevantData : Tile->CollisionInterface.NavigationRelevantData)
 		{
-			TObjectPtr<UObject> Owner = RelevantData->GetOwner();
-			if (Owner)
-			{
-				Collector.AddReferencedObject(Owner);
-			}
+			TWeakObjectPtr<const UObject> WeakObject = RelevantData->SourceElement->GetWeakUObject();
+			Collector.AddReferencedObject(WeakObject);
 		}
 	}
 }

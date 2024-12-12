@@ -94,7 +94,7 @@ void FSvoTile::TrimExcessNodes()
 
 		// Remove the unused nodes. Don't free the memory yet though, since we may trim
 		// multiple layers.
-		NodePool.RemoveAt(LayerEnd - NumNodesToRemove, NumNodesToRemove, false);
+		NodePool.RemoveAt(LayerEnd - NumNodesToRemove, NumNodesToRemove, EAllowShrinking::No);
 
 		CurLayer.MaxNodes -= NumNodesToRemove;
 

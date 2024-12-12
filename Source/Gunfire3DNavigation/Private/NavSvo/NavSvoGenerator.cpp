@@ -354,7 +354,7 @@ int32 FNavSvoGenerator::TickBuildTasks(const int32 MaxTasksToSubmit)
 			RunningGenerator.AsyncTask = nullptr;
 
 			// Remove from the list of building tiles
-			RunningGenerators.RemoveAtSwap(RunningGeneratorIdx, 1, false);
+			RunningGenerators.RemoveAtSwap(RunningGeneratorIdx, 1, EAllowShrinking::No);
 		}
 	}
 

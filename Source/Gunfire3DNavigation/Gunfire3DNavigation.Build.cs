@@ -6,12 +6,11 @@ namespace UnrealBuildTool.Rules
 	{
 		public Gunfire3DNavigation(ReadOnlyTargetRules Target) : base(Target)
 		{
-			PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
+			bEnableNonInlinedGenCppWarnings = true;
 
-			// This code can be pretty slow when it's unoptimized, so we always optimize
-			// it by default. Otherwise it can be painful building nav when you're trying
-			// to debug some other issue in DebugGame. If you need to debug the plugin
-			// just comment this line out.
+			// This code can be pretty slow when it's unoptimized, so we always optimize it by default. Otherwise it can
+			// be painful building nav when you're trying to debug some other issue in DebugGame. If you need to debug
+			// the plugin just comment this line out temporarily.
 			OptimizeCode = CodeOptimization.Always;
 
 			PrivateIncludePaths.AddRange(

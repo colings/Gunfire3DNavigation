@@ -512,8 +512,6 @@ FSvoNodeLink FSparseVoxelOctree::GetLinkForLocation(const FVector& Location, boo
 		//	Search for the overlapping voxel and return its state
 		if (CurNodeLink.IsLeafNode())
 		{
-			FVector VoxelLocation;
-
 			if (CurNode->GetNodeState() == ENodeState::Open)
 			{
 				return CurNode->GetSelfLink();

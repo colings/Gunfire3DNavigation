@@ -1,22 +1,21 @@
 // Copyright Gunfire Games, LLC. All Rights Reserved.
 
 #include "Gunfire3DNavData.h"
-
 #include "Gunfire3DNavDataRenderingComponent.h"
 #include "Gunfire3DNavigationCustomVersion.h"
 #include "Gunfire3DNavigationTypes.h"
 #include "Gunfire3DNavigationUtils.h"
+#include "NavigationSystem.h"
 #include "NavSvo/NavSvoGenerator.h"
-#include "NavSvo/NavSvoPathQuery.h"
 #include "NavSvo/NavSvoLocationQuery.h"
+#include "NavSvo/NavSvoPathQuery.h"
 #include "NavSvo/NavSvoStreamingData.h"
 #include "NavSvo/NavSvoUtils.h"
 #include "SparseVoxelOctree/EditableSparseVoxelOctree.h"
-
-#include "NavigationSystem.h"
 #if WITH_EDITOR
 #include "ObjectEditorUtils.h"
 #endif
+#include UE_INLINE_GENERATED_CPP_BY_NAME(Gunfire3DNavData)
 
 // Profiling stats
 DECLARE_CYCLE_STAT(TEXT("FindPath"), STAT_FindPath, STATGROUP_Gunfire3DNavigation);
@@ -52,7 +51,7 @@ AGunfire3DNavData::AGunfire3DNavData()
 		TestHierarchicalPathImplementation = TestPath;
 
 		// Register raycast implementation
-		RaycastImplementation = NavDataRaycast;
+		RaycastImplementationWithAdditionalResults = NavDataRaycast;
 	}
 }
 
@@ -917,7 +916,7 @@ bool AGunfire3DNavData::HasValidOctree() const
 	return (Octree.IsValid() && Octree->IsValid());
 }
 
-bool AGunfire3DNavData::NavDataRaycast(const ANavigationData* Self, const FVector& RayStart, const FVector& RayEnd, FVector& HitLocation, FSharedConstNavQueryFilter QueryFilter, const UObject* Querier /* = nullptr */)
+bool AGunfire3DNavData::NavDataRaycast(const ANavigationData* Self, const FVector& RayStart, const FVector& RayEnd, FVector& HitLocation, FNavigationRaycastAdditionalResults* AdditionalResults, FSharedConstNavQueryFilter QueryFilter, const UObject* Querier)
 {
 	SCOPE_CYCLE_COUNTER(STAT_Raycast);
 

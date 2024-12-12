@@ -1,10 +1,8 @@
 // Copyright Gunfire Games, LLC. All Rights Reserved.
 
 #include "Gunfire3DNavQueryFilter.h"
-
 #include "Gunfire3DNavData.h"
-#include "Gunfire3DNavigationUtils.h"
-#include "NavSvo/NavSvoQuery.h"
+#include UE_INLINE_GENERATED_CPP_BY_NAME(Gunfire3DNavQueryFilter)
 
 //////////////////////////////////////////////////////////////////////////
 // Gunfire3DNavQueryConstraints

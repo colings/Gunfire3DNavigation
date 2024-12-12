@@ -2,11 +2,8 @@
 
 #pragma once
 
-#include "Gunfire3DNavPath.h"
 #include "Gunfire3DNavQueryFilter.h"
-
 #include "NavigationData.h"
-
 #include "Gunfire3DNavData.generated.h"
 
 class FEditableSvo;
@@ -251,7 +248,7 @@ public:
 	static bool TestPath(const FNavAgentProperties& AgentProperties, const FPathFindingQuery& Query, int32* NumVisitedNodes);
 
 	// Raycast implementation required by ANavigationData
-	static bool NavDataRaycast(const ANavigationData* Self, const FVector& RayStart, const FVector& RayEnd, FVector& HitLocation, FSharedConstNavQueryFilter QueryFilter, const UObject* Querier = nullptr);
+	static bool NavDataRaycast(const ANavigationData* Self, const FVector& RayStart, const FVector& RayEnd, FVector& HitLocation, FNavigationRaycastAdditionalResults* AdditionalResults, FSharedConstNavQueryFilter QueryFilter, const UObject* Querier = nullptr);
 
 	// Raycasts batched for efficiency
 	virtual void BatchRaycast(TArray<FNavigationRaycastWork>& Workload, FSharedConstNavQueryFilter QueryFilter, const UObject* Querier = nullptr) const override;

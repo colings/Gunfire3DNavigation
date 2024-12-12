@@ -1,14 +1,11 @@
 // Copyright Gunfire Games, LLC. All Rights Reserved.
 
 #include "NavSvoCollider.h"
-
-#include "Gunfire3DNavigationGeometryExport.h"
-
 #include "DrawDebugHelpers.h"
-#include "NavigationSystem.h"
+#include "Gunfire3DNavigationGeometryExport.h"
 #include "NavAreas/NavArea.h"
+#include "NavigationSystem.h"
 #if WITH_RECAST
-// Recast-specific helpers
 #include "NavMesh/RecastHelpers.h"
 #endif
 
@@ -261,7 +258,7 @@ void FNavigationOctreeCollider::GatherGeometry(UWorld* World, const FNavDataConf
 				{
 					SCOPE_CYCLE_COUNTER(STAT_FNavigationOctreeCollider_GatherGeometry_LandscapeSlicesExporting);
 
-					INavRelevantInterface* NavRelevant = const_cast<INavRelevantInterface*>(Cast<const INavRelevantInterface>(Element.GetOwner()));
+					INavRelevantInterface* NavRelevant = const_cast<INavRelevantInterface*>(Cast<const INavRelevantInterface>(Element.GetSourceElement()->GetWeakUObject().Get()));
 					if (NavRelevant)
 					{
 						NavRelevant->PrepareGeometryExportSync();
@@ -338,7 +335,7 @@ void FNavigationOctreeCollider::GatherGeometryFromSources(const FBox& Bounds)
 
 	for (TNavigationData& NavData : NavigationRelevantData)
 	{
-		if (NavData->GetOwner() == nullptr)
+		if (NavData->SourceElement->GetWeakUObject().Get() == nullptr)
 		{
 			UE_LOG(LogNavigation, Warning, TEXT("GatherGeometry: skipping an element with no longer valid Owner"));
 			continue;
@@ -350,21 +347,13 @@ void FNavigationOctreeCollider::GatherGeometryFromSources(const FBox& Bounds)
 		{
 			SCOPE_CYCLE_COUNTER(STAT_FNavigationOctreeCollider_GatherGeometryFromSources_LandscapeSlicesExporting);
 
-			INavRelevantInterface* NavRelevant = Cast<INavRelevantInterface>(NavData->GetOwner());
-			if (NavRelevant)
-			{
-				NavRelevant->PrepareGeometryExportSync();
+			const FNavigationElement& SourceElement = NavData->SourceElement.Get();
 
-				FGunfire3DNavigationGeometryExport GeomExport(*NavData);
-				NavRelevant->GatherGeometrySlice(GeomExport, Bounds);
-				GeomExport.StoreCollisionCache();
+			FGunfire3DNavigationGeometryExport GeomExport(*NavData);
+			SourceElement.GeometrySliceExportDelegate.ExecuteIfBound(SourceElement, GeomExport, Bounds);
+			GeomExport.StoreCollisionCache();
 
-				bDumpGeometryData = true;
-			}
-			else
-			{
-				UE_LOG(LogNavigation, Error, TEXT("GatherGeometry: got an invalid NavRelevant instance!"));
-			}
+			bDumpGeometryData = true;
 		}
 
 		if (NavData->IsPendingLazyGeometryGathering() || NavData->IsPendingLazyModifiersGathering())
@@ -383,7 +372,7 @@ void FNavigationOctreeCollider::GatherGeometryFromSources(const FBox& Bounds)
 			}
 		}
 
-		const FCompositeNavModifier ModifierInstance = NavData->Modifiers.HasMetaAreas() ? NavData->Modifiers.GetInstantiatedMetaModifier(&NavDataConfigCached, NavData->SourceObject) : NavData->Modifiers;
+		const FCompositeNavModifier ModifierInstance = NavData->Modifiers.HasMetaAreas() ? NavData->Modifiers.GetInstantiatedMetaModifier(&NavDataConfigCached, NavData->SourceElement->GetWeakUObject()) : NavData->Modifiers;
 		if (ModifierInstance.IsEmpty() == false)
 		{
 			AppendModifier(ModifierInstance, Bounds, NavData->NavDataPerInstanceTransformDelegate);
