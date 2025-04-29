@@ -188,39 +188,6 @@ bool FNavSvoGenerator::IsBuildInProgressCheckDirty() const
 			(PendingTiles.Num() > 0));
 }
 
-bool FNavSvoGenerator::HasDirtyAreas(const FBox& Bounds) const
-{
-	// If this generator isn't currently building then it won't have anything to test
-	// against
-	if (!IsBuildInProgressCheckDirty())
-	{
-		return false;
-	}
-
-	const FBox ClampedBounds = Bounds.Overlap(Bounds);
-
-	// Check the overall generation bounds as an early-out
-	if (!ClampedBounds.IsValid)
-	{
-		return false;
-	}
-
-	const FIntVector MinCoord = Config.LocationToCoord(ClampedBounds.Min, Config.GetTileResolution());
-	const FIntVector MaxCoord = Config.LocationToCoord(ClampedBounds.Max, Config.GetTileResolution());
-
-	// Check Pending Tiles
-	for (const FPendingTile& PendingTile : PendingTiles)
-	{
-		if (FSvoUtils::IsCoordInBounds(PendingTile, MinCoord, MaxCoord))
-		{
-			return true;
-		}
-	}
-
-	// Check generating tiles
-	return IsCoordGenerating(MinCoord, MaxCoord);
-}
-
 bool FNavSvoGenerator::IsCoordGenerating(const FIntVector& MinCoord, const FIntVector& MaxCoord) const
 {
 	// Check the pending generator

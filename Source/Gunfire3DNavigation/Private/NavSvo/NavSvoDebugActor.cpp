@@ -10,6 +10,7 @@
 #if WITH_EDITOR
 #include "ObjectEditorUtils.h"
 #endif
+#include "Gunfire3DNavPath.h"
 #include "Components/BillboardComponent.h"
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(NavSvoDebugActor)

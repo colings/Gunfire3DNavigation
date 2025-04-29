@@ -79,7 +79,7 @@ void FGunfire3DNavigation::ShowNavType(const TArray<FString>& Args)
 		{
 			ANavigationData* NavData = *Itr;
 
-			const bool ShowType = (NavData->GetConfig().GetName().ToString() == Args[0]);
+			const bool ShowType = (NavData->GetConfig().Name.ToString() == Args[0]);
 
 			NavData->SetNavRenderingEnabled(ShowType);
 
@@ -99,7 +99,7 @@ void FGunfire3DNavigation::PopulateAutoCompleteEntries(TArray<FAutoCompleteComma
 	{
 		AutoCompleteList.AddDefaulted();
 		FAutoCompleteCommand& AutoCompleteCommand = AutoCompleteList.Last();
-		AutoCompleteCommand.Command = FString::Printf(TEXT("ShowNavType %s"), *Config.GetName().ToString());
+		AutoCompleteCommand.Command = FString::Printf(TEXT("ShowNavType %s"), *Config.Name.ToString());
 	}
 }
 

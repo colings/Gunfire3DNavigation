@@ -37,10 +37,7 @@ public:
 
 	// Determines whether this generator is performing navigation building actions at the moment
 	virtual bool IsBuildInProgressCheckDirty() const override;
-
-	// Returns true if there are any dirty areas in the specified bounds
-	virtual bool HasDirtyAreas(const FBox& Bounds) const override;
-
+	
 	// Returns number of remaining tasks till build is complete
 	virtual int32 GetNumRemaningBuildTasks() const override;
 
